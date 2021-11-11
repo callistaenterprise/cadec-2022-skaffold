@@ -1,0 +1,115 @@
+apiVersion: skaffold/v2beta16
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+profiles:
+  - name: remote
+    build:
+      # local:
+      #   push: false
+      googleCloudBuild:
+        projectId: posts-dev-314316
+      artifacts:
+        - image: gcr.io/posts-dev-314316/client
+          context: client
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/comments
+          context: comments
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/event-bus
+          context: event-bus
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/moderation
+          context: moderation
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/posts
+          context: posts
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/query
+          context: query
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+  - name: local
+    build:
+    local:
+      push: false
+    artifacts:
+      - image: stephengrider/client
+        context: client
+        docker:
+          dockerfile: Dockerfile
+        sync:
+          manual:
+            - src: "src/**/*.js"
+              dest: .
+      - image: stephengrider/comments
+        context: comments
+        docker:
+          dockerfile: Dockerfile
+        sync:
+          manual:
+            - src: "*.js"
+              dest: .
+      - image: stephengrider/event-bus
+        context: event-bus
+        docker:
+          dockerfile: Dockerfile
+        sync:
+          manual:
+            - src: "*.js"
+              dest: .
+      - image: stephengrider/moderation
+        context: moderation
+        docker:
+          dockerfile: Dockerfile
+        sync:
+          manual:
+            - src: "*.js"
+              dest: .
+      - image: stephengrider/posts
+        context: posts
+        docker:
+          dockerfile: Dockerfile
+        sync:
+          manual:
+            - src: "*.js"
+              dest: .
+      - image: stephengrider/query
+        context: query
+        docker:
+          dockerfile: Dockerfile
+        sync:
+          manual:
+            - src: "*.js"
+              dest: .

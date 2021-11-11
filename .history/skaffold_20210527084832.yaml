@@ -1,0 +1,117 @@
+apiVersion: skaffold/v2beta16
+kind: Config
+profiles:
+  - name: remote-profile
+    deploy:
+      kubectl:
+        manifests:
+          - ./infra/k8s/remote/*
+    build:
+      googleCloudBuild:
+        projectId: posts-dev-314316
+      artifacts:
+        - image: gcr.io/posts-dev-314316/client
+          context: client
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/comments
+          context: comments
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/event-bus
+          context: event-bus
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/moderation
+          context: moderation
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/posts
+          context: posts
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: gcr.io/posts-dev-314316/query
+          context: query
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+  - name: local-profile
+    deploy:
+      kubectl:
+        manifests:
+          - ./infra/k8s/local/*
+    build:
+      local:
+        push: false
+      artifacts:
+        - image: maitriyogin/client
+          context: client
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.js"
+                dest: .
+        - image: maitriyogin/comments
+          context: comments
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: maitriyogin/event-bus
+          context: event-bus
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: maitriyogin/moderation
+          context: moderation
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: maitriyogin/posts
+          context: posts
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
+        - image: maitriyogin/query
+          context: query
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "*.js"
+                dest: .
